@@ -6,6 +6,9 @@ services:
     container_name: redis-cache1
     ports:
       - "6379:6379"
+    volumes:
+      - ./Compose1_LRU/redis.conf:/usr/local/etc/redis/redis.conf 
+    command: redis-server /usr/local/etc/redis/redis.conf
     networks:
       - redis-network
 
@@ -14,6 +17,9 @@ services:
     container_name: redis-cache2
     ports:
       - "6380:6379"
+    volumes:
+      - ./Compose1_LRU/redis.conf:/usr/local/etc/redis/redis.conf 
+    command: redis-server /usr/local/etc/redis/redis.conf
     networks:
       - redis-network
 
@@ -22,6 +28,9 @@ services:
     container_name: redis-cache3
     ports:
       - "6381:6379"
+    volumes:
+      - ./Compose1_LRU/redis.conf:/usr/local/etc/redis/redis.conf 
+    command: redis-server /usr/local/etc/redis/redis.conf
     networks:
       - redis-network
 
