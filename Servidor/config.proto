@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package reclamos;
+
+service ReclamosService {
+    rpc GetReclamoById (ReclamoRequest) returns (ReclamoResponse);
+}
+
+message ReclamoRequest {
+    int32 id = 1;
+}
+
+message ReclamoResponse {
+    int32 id = 1;
+    string comuna_consumidor = 2;
+    int32 region_consumidor = 3;
+    string nombre_region_consumidor = 4;
+    string nombre_mercado = 5;
+    string nombre_categoria_mercado = 6;
+    string tipo_prod = 7;
+    string motivo_legal = 8;
+    string categoria_ml = 9;
+    string resultado = 10;
+}

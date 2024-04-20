@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  redis-cache1:
+    image: redis:7.0
+    container_name: redis-cache1
+    ports:
+      - "6379:6379"  # Mapea el puerto 6379 del contenedor al puerto 6379 en el host
+    networks:
+      - redis-network
+
+  redis-cache2:
+    image: redis:7.0
+    container_name: redis-cache2
+    ports:
+      - "6380:6379"  # Mapea el puerto 6379 del contenedor al puerto 6380 en el host
+    networks:
+      - redis-network
+
+  redis-cache3:
+    image: redis:7.0
+    container_name: redis-cache3
+    ports:
+      - "6381:6379"  # Mapea el puerto 6379 del contenedor al puerto 6381 en el host
+    networks:
+      - redis-network
+
+networks:
+  redis-network:
+    driver: bridge

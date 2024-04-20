@@ -1,0 +1,80 @@
+version: '3'
+
+services:
+  redis-master:
+    image: redis:7.0
+    container_name: redis-master
+    command: redis-server --port 6383 --appendonly yes
+    ports:
+      - "6383:6383"  # Cambia el puerto mapeado a 6383
+    networks:
+      - redis-network
+    volumes:
+      - redis-master-data:/data
+
+  redis-slave1:
+    image: redis:7.0
+    container_name: redis-slave1
+    command: redis-server --replicaof redis-master 6383 --appendonly yes
+    ports:
+      - "6384:6383"  # Cambia el puerto mapeado a 6384
+    networks:
+      - redis-network
+    volumes:
+      - redis-slave1-data:/data
+
+  redis-slave2:
+    image: redis:7.0
+    container_name: redis-slave2
+    command: redis-server --replicaof redis-master 6383 --appendonly yes
+    ports:
+      - "6385:6383"  # Cambia el puerto mapeado a 6385
+    networks:
+      - redis-network
+    volumes:
+      - redis-slave2-data:/data
+
+  redis-sentinel1:
+    image: redis:7.0
+    container_name: redis-sentinel1
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    ports:
+      - "26379:26379"
+    networks:
+      - redis-network
+    volumes:
+      # Monta el archivo de configuración `sentinel.conf` desde el host al contenedor
+      - /home/kerssen/Descargas/sentinel.conf:/usr/local/etc/redis/sentinel.conf
+
+  redis-sentinel2:
+    image: redis:7.0
+    container_name: redis-sentinel2
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    ports:
+      - "26380:26380"
+    networks:
+      - redis-network
+    volumes:
+      # Monta el archivo de configuración `sentinel.conf` desde el host al contenedor
+      - /home/kerssen/Descargas/sentinel.conf:/usr/local/etc/redis/sentinel.conf
+
+  redis-sentinel3:
+    image: redis:7.0
+    container_name: redis-sentinel3
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    ports:
+      - "26381:26381"
+    networks:
+      - redis-network
+    volumes:
+      # Monta el archivo de configuración `sentinel.conf` desde el host al contenedor
+      - /home/kerssen/Descargas/sentinel.conf:/usr/local/etc/redis/sentinel.conf
+
+networks:
+  redis-network:
+    driver: bridge
+
+volumes:
+  redis-master-data:
+  redis-slave1-data:
+  redis-slave2-data:
