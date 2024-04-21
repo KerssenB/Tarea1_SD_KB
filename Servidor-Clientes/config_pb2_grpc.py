@@ -10,16 +10,21 @@ class ReclamosServiceStub(object):
 
     def __init__(self, channel):
         """Constructor.
-
+    
         Args:
             channel: A grpc.Channel.
         """
+        # Define request serializer
+        self.request_serializer = config__pb2.ReclamoRequest.SerializeToString
+        # Define response deserializer
+        self.response_deserializer = config__pb2.ReclamoResponse.FromString
+    
         self.GetReclamoById = channel.unary_unary(
                 '/reclamos.ReclamosService/GetReclamoById',
-                request_serializer=config__pb2.ReclamoRequest.SerializeToString,
-                response_deserializer=config__pb2.ReclamoResponse.FromString,
+                request_serializer=self.request_serializer,
+                response_deserializer=self.response_deserializer,
                 )
-
+    
 
 class ReclamosServiceServicer(object):
     """Missing associated documentation comment in .proto file."""

@@ -18,7 +18,7 @@ def get_reclamo(id):
 
     if cached_data:
         response = config_pb2.ReclamoResponse()
-        response.ParseFromString(cached_data)
+        response.FromString(cached_data)
         return jsonify({
             "id": response.id,
             "comuna_consumidor": response.comuna_consumidor,

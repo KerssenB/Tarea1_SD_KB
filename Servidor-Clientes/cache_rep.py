@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 import grpc
+import json
 import redis
 import config_pb2
 import config_pb2_grpc
@@ -18,13 +19,15 @@ stub = config_pb2_grpc.ReclamosServiceStub(channel)
 @app.route('/get_reclamo/<int:id>', methods=['GET'])
 def get_reclamo(id):
     cache_key = f"reclamo:{id}"
-
     cached_data = cache.get(cache_key)
 
     if cached_data:
         response = config_pb2.ReclamoResponse()
-        response.FromString(cached_data)
-        return jsonify({
+        response.ParseFromString(cached_data)
+        
+        print("Resultado en cache.\n")
+        
+        data = {
             "id": response.id,
             "comuna_consumidor": response.comuna_consumidor,
             "region_consumidor": response.region_consumidor,
@@ -35,14 +38,20 @@ def get_reclamo(id):
             "motivo_legal": response.motivo_legal,
             "categoria_ml": response.categoria_ml,
             "resultado": response.resultado
-        })
+        }
+        
+        print(data)
+        
+        return json.dumps(data)
 
     request_data = config_pb2.ReclamoRequest(id=id)
     response = stub.GetReclamoById(request_data)
 
     cache.set(cache_key, response.SerializeToString(), ex=3600)  # Caché de 1 hora
+    
+    print("Guardando resultado en cache.\n")
 
-    return jsonify({
+    data = {
         "id": response.id,
         "comuna_consumidor": response.comuna_consumidor,
         "region_consumidor": response.region_consumidor,
@@ -53,7 +62,9 @@ def get_reclamo(id):
         "motivo_legal": response.motivo_legal,
         "categoria_ml": response.categoria_ml,
         "resultado": response.resultado
-    })
+    }
+    
+    return json.dumps(data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
